@@ -6,6 +6,7 @@ const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
 const { createStore } = require('./utils');
 const resolvers = require('./resolvers');
+const isEmail = require('isemail');
 const uri = "mongodb+srv://admin_user:admin123@cluster0.qfjnr.mongodb.net/reactSocial?retryWrites=true&w=majority";
 
 const store = createStore();
@@ -23,7 +24,16 @@ const server = new ApolloServer({
     launchAPI: new dataSources.LaunchData(),
     userAPI: new dataSources.UserData({ store }),
     postAPI: new dataSources.PostData(PostModel),
-  })
+  }),
+  context: async ({ req }) => {
+    const auth = req.headers && req.headers.authorization || '';
+    const email = Buffer.from(auth, 'base64').toString('ascii');
+    if (!isEmail.validate(email)) return { user: null };
+
+    const users = await store.users.findOrCreate({ where: { email }});
+    const user = users && users[0] || null;
+    return { user: { ...user.dataValues }};
+  },
 });
 
 startServer();

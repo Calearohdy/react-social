@@ -22,7 +22,7 @@
     "mongoose": "^5.13.2",
     "nodemon": "^1.18.4",
     "sequelize": "^5.15.1",
-    "sqlite3": "^4.0.3"
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "apollo": "^2.32.5",
