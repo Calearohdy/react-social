@@ -8,9 +8,7 @@ class Posts extends MongoDataSource {
   }
 
   async getPosts() {
-    const dbPosts = await this.model.find();
-    console.log(dbPosts);
-    return dbPosts;
+    return await this.model.find();
   }
 }
 
